@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Storage</title>
+    <link rel="stylesheet" href="/static/style.css">
+
+</head>
+<body>
+    <!-- Notifications -->
+    {% if request.query_params.get('message') %}
+    <div id="notification" class="notification success">
+        ✅ {{ request.query_params.get('message') }}
+    </div>
+    {% endif %}
+
+    {% if request.query_params.get('error') %}
+    <div id="notification" class="notification error">
+        ❌ {{ request.query_params.get('error') }}
+    </div>
+    {% endif %}
+
+
+    <h2>Format Disk</h2>
+    <form method="post" action="/storage">
+        <select name="selected_disk" required>
+            <option value="">Select a disk</option>
+            {% for device in drives.blockdevices %}
+        <!-- Main Device -->
+        <option value="{{ device.name }}">
+            🖴 {{ device.name }} - {{ device.size }}
+        </option>
+        
+        <!-- Partitions (if any) -->
+        {% if device.children %}
+            {% for child in device.children %}
+                <option value="{{ child.name }}">
+                    &nbsp;&nbsp;📑 {{ child.name }} - {{ child.size }}
+                </option>
+            {% endfor %}
+        {% endif %}
+      {% endfor %}
+    </select>
+
+        
+        <select name="filesystem" required>
+            <option value="ext4">ext4</option>
+            <option value="xfs">zfs</option>
+        </select>
+        
+        <button type="submit">Format</button>
+    </form>
+    <p>Formatting a disk may result the lose of data.</p>
+
+    <script src="/static/style.js"></script>
+</body>
+</html>

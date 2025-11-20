@@ -1,0 +1,6 @@
+uvicorn
+jinja2
+psutil
+logging
+fastapi
+docker
