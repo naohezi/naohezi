@@ -15,7 +15,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
-@app.get("/storage", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse)
 async def storage_page(request: Request):
     return templates.TemplateResponse(
       "storage.html",
@@ -28,3 +28,5 @@ async def format_disk_route( selected_disk: str = Form(...), filesystem: str = F
       return RedirectResponse("/storage?message=Success", status_code=303)
     except Exception as e:
       return RedirectResponse(f"/storage?error={str(e)}", status_code=303)
+
+

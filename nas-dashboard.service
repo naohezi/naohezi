@@ -1,0 +1,22 @@
+[Unit]
+Description=NAS Dashboard Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=naohezi
+Group=naohezi
+WorkingDirectory=/opt/dashboard
+ExecStart=/opt/dashboard/start_server.sh
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+Environment=PYTHONPATH=/opt/dashboard
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
+
