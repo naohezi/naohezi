@@ -24,10 +24,10 @@
     <form method="post" action="/storage">
         <select name="selected_disk" required>
             <option value="">Select a disk</option>
-            {% for device in drives.blockdevices %}
+             {% for device in drives.blockdevices %}
         <!-- Main Device -->
         <option value="{{ device.name }}">
-            🖴 {{ device.name }} - {{ device.size }}
+             {{ device.name }} - {{ device.size }}
         </option>
         
         <!-- Partitions (if any) -->

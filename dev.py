@@ -9,13 +9,17 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 
 from system_monitor import show_drives, format_disk
+from wizard import initial_wizard
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-
 @app.get("/", response_class=HTMLResponse)
+def wizard():
+  return initial_wizard()
+
+@app.get("/storage", response_class=HTMLResponse)
 async def storage_page(request: Request):
     return templates.TemplateResponse(
       "storage.html",
@@ -28,5 +32,4 @@ async def format_disk_route( selected_disk: str = Form(...), filesystem: str = F
       return RedirectResponse("/storage?message=Success", status_code=303)
     except Exception as e:
       return RedirectResponse(f"/storage?error={str(e)}", status_code=303)
-
 

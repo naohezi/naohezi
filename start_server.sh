@@ -2,7 +2,7 @@
 
 # Wait to make sure we load the server properly.
 # Only change this settings if you know what are you doing.
-sleep 10
+#sleep 10
 
 # Navigate to project directory
 
@@ -21,7 +21,7 @@ pip || {
 
 
 # Make sure that venv is installed
-if [! -f "venv/bin/activate"]; then
+if ! [ -f "venv/bin/activate" ]; then
   echo "[+] ERROR: Virtual environment not found at /opt/dashboard/venv"
   echo "[+] Creating virtual environment"
   python3 -m venv venv
@@ -30,7 +30,7 @@ fi
 # Activate  
 source venv/bin/activate
 
-if [ -f "requirements.txt"]
+if [ -f "requirements.txt" ]; then
   pip install -r requirements.txt
 fi
 
