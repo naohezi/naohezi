@@ -1,12 +1,67 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <title>Minimal base.html</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Initial Setup | NAS Dashboard{% endblock %}
+{% block header_title %}Storage Setup Wizard{% endblock %}
 
-</body>
-</html>
+{% block content %}
+<section class="card">
+    <div class="card-header">
+        <div>
+            <p class="eyebrow">Step 1</p>
+            <h2>Prepare your primary drive</h2>
+            <p class="muted">Select a disk, format it with your preferred filesystem, and choose where to mount it.</p>
+        </div>
+    </div>
+
+    {% if message %}
+    <div id="notification" class="notification success show">✅ {{ message }}</div>
+    {% endif %}
+
+    <form method="post" class="form-grid">
+        <div class="form-field">
+            <label for="selected_disk">Available disks</label>
+            <select id="selected_disk" name="selected_disk" required>
+                <option value="">Select a disk</option>
+                {% for device in disks %}
+                    <option value="{{ device.name }}">
+                        {{ device.name }} · {{ device.size }} {% if device.fstype %}· {{ device.fstype }}{% endif %}
+                        {% if device.mountpoint %} · mounted at {{ device.mountpoint }}{% endif %}
+                    </option>
+                    {% if device.children %}
+                        {% for child in device.children %}
+                            <option value="{{ child.name }}">↳ {{ child.name }} · {{ child.size }} {% if child.fstype %}· {{ child.fstype }}{% endif %}</option>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <p class="helper">Review the device name carefully. Formatting erases all data.</p>
+        </div>
+
+        <div class="form-field">
+            <label for="filesystem">Filesystem</label>
+            <select id="filesystem" name="filesystem" required>
+                {% for fs in filesystems %}
+                    <option value="{{ fs }}">{{ fs|upper }}</option>
+                {% endfor %}
+            </select>
+            <p class="helper">ext4 for broad compatibility, btrfs for snapshots, zfs for advanced redundancy.</p>
+        </div>
+
+        <div class="form-field">
+            <label for="mount_path">Mount point</label>
+            <input id="mount_path" name="mount_path" type="text" placeholder="/mnt/storage" required>
+            <p class="helper">The path where the disk will be mounted. Folder will be created if it does not exist.</p>
+        </div>
+
+        <div class="form-field">
+            <label for="data_folder">Data folder (optional)</label>
+            <input id="data_folder" name="data_folder" type="text" placeholder="media">
+            <p class="helper">Create a folder inside the mount point for your datasets (e.g. backups, media).</p>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="primary">Format &amp; Mount</button>
+            <p class="danger-note">⚠️ This will format the selected disk and may erase existing data.</p>
+        </div>
+    </form>
+</section>
+{% endblock %}
